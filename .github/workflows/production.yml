@@ -11,6 +11,9 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+        name: Production
+        url: https://wyplanner.vercel.app/
     steps:
         - name: Cloning Repository
           uses: actions/checkout@v3
