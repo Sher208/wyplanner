@@ -1,0 +1,36 @@
+name: Deploy Application
+
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+env:
+    VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+    VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Cloning Repository
+          uses: actions/checkout@v3
+
+        - name: Use Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: 16
+
+        - name: Install Dependencies
+          run: npm ci --production
+
+        - name: Install Vercel
+          run: npm install vercel
+
+        - name: Setup Env in Vercel
+          run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+        - name: Build Application
+          run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+        - name: Deploy Application
+          run: yarn vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
